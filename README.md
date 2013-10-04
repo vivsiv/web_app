@@ -1,4 +1,4 @@
-ff_web_app
+web_app
 ==========
 
 Fantasy Football Web App
