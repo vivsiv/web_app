@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Address:</b>
+  <%= @bike_station.address %>
+</p>
+
+<p>
+  <b>Spaces:</b>
+  <%= @bike_station.spaces %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @bike_station.status %>
+</p>
+
+<p>
+  <b>Coordinates:</b>
+  <%= @bike_station.coordinates %>
+</p>
+
+
+<%= link_to 'Edit', edit_bike_station_path(@bike_station) %> |
+<%= link_to 'Back', bike_stations_path %>

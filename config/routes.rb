@@ -1,4 +1,10 @@
 WebApp::Application.routes.draw do
+  resources :locations, :only => [:new, :create, :destroy]
+
+
+  resources :bike_stations, :only => [:new, :create, :index, :destroy]
+
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
