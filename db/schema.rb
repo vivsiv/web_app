@@ -11,29 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131106230957) do
+ActiveRecord::Schema.define(:version => 20131107004556) do
 
   create_table "bike_stations", :force => true do |t|
     t.string   "name",         :null => false
     t.string   "status",       :null => false
     t.integer  "spaces",       :null => false
-    t.integer  "location_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.string   "station_type"
+    t.string   "address"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
+  add_index "bike_stations", ["address"], :name => "index_bike_stations_on_address"
   add_index "bike_stations", ["name"], :name => "index_bike_stations_on_name"
   add_index "bike_stations", ["spaces"], :name => "index_bike_stations_on_spaces"
-
-  create_table "locations", :force => true do |t|
-    t.string   "address",    :null => false
-    t.float    "latitude",   :null => false
-    t.float    "longitude",  :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "locations", ["address"], :name => "index_locations_on_address", :unique => true
 
 end

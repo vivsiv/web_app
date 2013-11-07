@@ -2,13 +2,12 @@ class BikeStationsController < ApplicationController
   # GET /bike_stations
   # GET /bike_stations.json
   def index
-    if params[:current_location]
+    location = params[:location] ? params[:location] : "2451 Greenwich St."
+    Rails.logger.info location.inspect
 
-    else
-      @current_location = nil
-    end
-
-    @bike_stations = BikeStation.where(:location => 1).limit(5)
+    @bike_stations = BikeStation.near(location, 0.5, :order => :distance).limit(5)
+    Rails.logger.info "------"
+    Rails.logger.info @bike_stations.inspect
 
     respond_to do |format|
       format.html # index.html.erb
@@ -49,16 +48,7 @@ class BikeStationsController < ApplicationController
   # PUT /bike_stations/1.json
   def update
     @bike_station = BikeStation.find(params[:id])
-
-    respond_to do |format|
-      if @bike_station.update_attributes(params[:bike_station])
-        format.html { redirect_to @bike_station, notice: 'Bike station was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @bike_station.errors, status: :unprocessable_entity }
-      end
-    end
+    @bike_station.update_attributes(params[:bike_station])
   end
 
   # DELETE /bike_stations/1
@@ -66,10 +56,5 @@ class BikeStationsController < ApplicationController
   def destroy
     @bike_station = BikeStation.find(params[:id])
     @bike_station.destroy
-
-    respond_to do |format|
-      format.html { redirect_to bike_stations_url }
-      format.json { head :no_content }
-    end
   end
 end

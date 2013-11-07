@@ -1,42 +1,49 @@
-<html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map-canvas { height: 100% }
-    </style>
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDZk3a0eNyOmKF7ejQ4bLHCA7G38Cb_RI&sensor=true">
-    </script>
-    <script type="text/javascript">
-      function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(37.7833, -122.4167),
-          zoom: 14,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map-canvas"),
-            mapOptions);
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
-  </head>
-  <body>
-    <div>
-      <input></input>
-      <button>search</button>
-    </div>
-    <div>
-      <ol>
-        <li>Bike station #1<button>Select</button></li>
-        <li>Bike station #2<button>Select</button></li>
-        <li>Bike station #3<button>Select</button></li>
-      </ol>
-    </div>
-    <div id="map-canvas">
-    </div>
-  </body>
-</html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <style type="text/css">
+    html { height: 100% }
+    body { height: 100%; margin: 0; padding: 0 }
+    #map-canvas { height: 100% }
+  </style>
+  <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDZk3a0eNyOmKF7ejQ4bLHCA7G38Cb_RI&sensor=true">
+  </script>
+  <script type="text/javascript">
+    function initialize() {
+      var mapOptions = {
+        center: new google.maps.LatLng(37.7833, -122.4167),
+        zoom: 14,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map-canvas"),
+          mapOptions);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+  </script>
+</head>
 
-<%= link_to 'New Bike station', new_bike_station_path %>
+<body>
+  <%= form_tag bike_stations_index_path do %>
+    <div>
+      <input id="location" name="location"></input>
+      <%= submit_tag 'Set Location', :id => "submit_location" %>
+    </div>
+  <% end %>
+
+  <div>
+    <ol>
+      <% @bike_stations.each do |station| %>
+        <li>
+          <%= "#{station.distance.round(2)} miles - #{station.name} (#{station.spaces} Spaces)" %>
+          <button>Select</button>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+
+  <div id="map-canvas">
+  </div>
+
+</body>
+
+

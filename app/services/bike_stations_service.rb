@@ -1,7 +1,6 @@
 require 'digest'
 require 'open-uri'
 require 'net/http'
-#require 'oauth'
 
 class BikeStationsService
   def self.get_bike_stations
@@ -16,31 +15,24 @@ class BikeStationsService
 
   def self.create_bike_stations(data)
     data.each do |station_data|
-      address = station_data['yr_inst'] == "None" ? station_data['location_name'] : station_data['yr_inst']
-      longitude = station_data['coordinates']['longitude'].to_f
-      latitude = station_data['coordinates']['latitude'].to_f
-
-      location = Location.find_or_create_by_address({
-        'address' => address,
-        'longitude' => longitude,
-        'latitude' => latitude
-      })
-      Rails.logger.info "created/updated location: #{location.inspect}"
-
       name = station_data['location_name'] == "_undetermined" ? "Unknown" : station_data['location_name']
       station_type = station_data['placement'].downcase.gsub("_", " ")
       status = station_data['status'].downcase.gsub("_", " ")
       spaces = station_data['spaces'].to_i
+      address = station_data['yr_inst'] == "None" ? station_data['location_name'] : station_data['yr_inst']
+      longitude = station_data['coordinates']['longitude'].to_f
+      latitude = station_data['coordinates']['latitude'].to_f
 
-      bike_station = BikeStation.new({
+      bike_station = BikeStation.find_or_create_by_address({
         :name => name,
         :station_type => station_type,
         :status => status,
-        :spaces => spaces
+        :spaces => spaces,
+        :address => address,
+        :longitude => longitude,
+        :latitude => latitude
       })
 
-      bike_station.location = location
-      bike_station.save!
       Rails.logger.info "created bike station: #{bike_station.inspect}"
     end
   end

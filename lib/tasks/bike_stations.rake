@@ -3,7 +3,7 @@ namespace :bike_stations do
   task :seed_bike_stations => :environment do |t|
     puts "getting bike stations"
     data = BikeStationsService.get_bike_stations
-    puts "seeing bike stations"
+    puts "seeding bike stations"
     BikeStationsService.create_bike_stations(data)
   end
 

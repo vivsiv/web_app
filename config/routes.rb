@@ -1,10 +1,9 @@
 WebApp::Application.routes.draw do
-  resources :locations, :only => [:new, :create, :destroy]
+  root :to => 'bike_stations#index'
 
+  resources :bike_stations, :only => [:new, :create, :destroy]
 
-  resources :bike_stations, :only => [:new, :create, :index, :destroy]
-
-
+  match '/' => 'bike_stations#index', :via => [:get, :post], :as => :bike_stations_index
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
