@@ -1,44 +1,55 @@
-<head>
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-  <style type="text/css">
-    html { height: 100% }
-    body { height: 100%; margin: 0; padding: 0 }
-    #map-canvas { height: 100% }
-  </style>
-
-</head>
-
-<body>
+<div id="navigator">
   <%= form_tag bike_stations_index_path, :id => "find_stations" do %>
     <%= hidden_field_tag 'origin', nil, :id => "origin" %>
     <%= hidden_field_tag 'route', nil, :id => "route" %>
-    <div>
-      <input id="new_origin"></input>
-      <span>San Francisco, CA</span>
-      <br/>
-      <%= submit_tag 'Set Origin', :id => "set_origin" %>
+    <div class="row">
+      <div class="input-prepend input-append span6">
+        <input class="span3" id="new_origin" type="text"></input>
+        <span class="add-on">San Francisco, CA</span>
+        <%= submit_tag 'Set Origin', :id => "set_origin", :class => 'btn' , :type => "button" %>
+      </div>
+
+      <% if @bike_stations %>
+        <div class="btn-group span6">
+          <a class="btn dropdown-toggle" data-toggle="dropdown">
+            <span id="route_choice"><%= "#{@destination.address}" %></span>
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <% @bike_stations.each do |station| %>
+              <li><a class="new_route" id="<%= station.id %>">
+                <% unless station.name == "Unknown" %>
+                  <%= "#{station.distance.to_f.round(2)} miles - #{station.name} (#{station.spaces} Spaces)" %>
+                <% else %>
+                  <%= "#{station.distance.to_f.round(2)} miles - #{station.address} (#{station.spaces} Spaces)" %>
+                <% end %>
+              </a></li>
+            <% end %>
+          </ul>
+          <%= submit_tag 'Route', :class => "btn" %>
+        </div>
+      <% end %>
     </div>
 
-    <% if @bike_stations %>
-      <div>
-        <ol>
-          <% @bike_stations.each_with_index do |station| %>
-            <li>
-              <% unless station.name == "Unknown" %>
-                <%= "#{station.distance.to_f.round(2)} miles - #{station.name} (#{station.spaces} Spaces)" %>
-              <% else %>
-                <%= "#{station.distance.to_f.round(2)} miles - #{station.address} (#{station.spaces} Spaces)" %>
-              <% end %>
-              <%= submit_tag 'Route', :class => "new_route", :id => station.id %>
-            </li>
-          <% end %>
-        </ol>
+    <% if @destination %>
+      <div class="row">
+        <div class="span5">
+          <div class="input-prepend input-append">
+            <span class="add-on badge badge-success">A</span>
+            <span class="span5 uneditable-input" type="text"><%= "#{@origin.address}" %></span>
+          </div>
+          <div class="input-prepend input-append">
+            <span class="add-on badge badge-important">B</span>
+            <span class="span5 uneditable-input" type="text"><%= "#{@destination.address}" %></span>
+          </div>
+        </div>
       </div>
     <% end %>
-  <% end %>
 
-  <div id="map-canvas"></div>
-</body>
+  <% end %>
+</div>
+
+<div id="map-canvas"></div>
 
 <%= render 'map_js' %>
 

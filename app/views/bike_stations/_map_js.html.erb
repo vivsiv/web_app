@@ -92,7 +92,8 @@
       $('#origin').val("<%= @origin.address %>");
     <% end %>
     $("#route").val($(this).attr("id"));
-    $('#find_stations').submit();
+    $('#route_choice').html($(this).html());
+    //$('#find_stations').submit();
   });
 
   $("#set_origin").click(function(e){

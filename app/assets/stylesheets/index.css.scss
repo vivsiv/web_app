@@ -1,0 +1,35 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  padding: 0 !important;
+  margin: 0 !important
+}
+
+body { background: #fff; }
+
+.current_route {
+  color: green
+}
+
+#navigator, #map-canvas {
+  margin-left: 2.5%;
+}
+
+#navigator {
+  margin-top: 1%
+}
+
+#map-canvas {
+  width: 95%;
+  height: 85%;
+  border: 2px solid black
+}
+
+#map-canvas label {
+  width: auto;
+  display:inline;
+}
+
+#map-canvas img {
+  max-width: none;
+}
