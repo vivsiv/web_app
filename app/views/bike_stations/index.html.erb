@@ -24,7 +24,7 @@
         <ol>
           <% @bike_stations.each_with_index do |station| %>
             <li>
-              <%= "#{station.distance.round(2)} miles - #{station.name} (#{station.spaces} Spaces)" %>
+              <%= "#{station.distance.to_f.round(2)} miles - #{station.name} (#{station.spaces} Spaces)" %>
               <%= submit_tag 'Route', :class => "new_route", :id => station.id %>
             </li>
           <% end %>
