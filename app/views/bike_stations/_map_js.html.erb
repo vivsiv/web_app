@@ -1,6 +1,20 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDZk3a0eNyOmKF7ejQ4bLHCA7G38Cb_RI&sensor=true">
 </script>
 <script type="text/javascript">
+  function geolocateUser(){
+    if (navigator.geolocation) {
+      var positionOptions = {
+        enableHighAccuracy : true,
+        timeout: 10 * 1000
+      }
+      navigator.geolocation.getCurrentPosition(drawMap(new google.maps.LatLng(position.coords.latitude, position.coords.longitude)), geolocationError, positionOptions);
+    }
+  }
+
+  function geolocationError(positionError){
+
+  }
+
   function drawMap(userLocation){
     mapOptions = {
       center: userLocation,
@@ -10,26 +24,35 @@
 
     window.mapObject = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
-    <% @bike_stations.each do |bike_station| %>
-      var location = new google.maps.LatLng(<%= bike_station.latitude %>, <%= bike_station.longitude %>);
-      new google.maps.Marker({map: window.mapObject, position: location });
+    <% unless @origin %>
+      codeOrigin();
     <% end %>
 
-    drawRoute(userLocation, <%= @destination.latitude %>, <%= @destination.longitude %>);
+    setMarkers();
+
+    <% if @destination %>
+      drawRoute(userLocation, <%= @destination.latitude %>, <%= @destination.longitude %>);
+    <% end %>
   }
 
-  function geolocationError(positionError){
-
-  }
-
-  function geolocateUser(){
-    if (navigator.geolocation) {
-      var positionOptions = {
-        enableHighAccuracy : true,
-        timeout: 10 * 1000
+  function codeOrigin(){
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode({'latLng': window.mapObject.center}, function(results, status){
+      if (status == google.maps.GeocoderStatus.OK){
+        if (results[1]){
+          $('#new_origin').val(results[1].formatted_address);
+        }
       }
-      navigator.geolocation.getCurrentPosition(drawMap(new google.maps.LatLng(position.coords.latitude, position.coords.longitude)), geolocationError, positionOptions);
-    }
+    });
+  }
+
+  function setMarkers(){
+    <% if @bike_stations %>
+      <% @bike_stations.each do |bike_station| %>
+        var location = new google.maps.LatLng(<%= bike_station.latitude %>, <%= bike_station.longitude %>);
+        new google.maps.Marker({map: window.mapObject, position: location });
+      <% end %>
+    <% end %>
   }
 
   function drawRoute(userLocation, destLat, destLong){
