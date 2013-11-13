@@ -11,7 +11,7 @@
 <body>
   <%= form_tag bike_stations_index_path, :id => "find_stations" do %>
     <%= hidden_field_tag 'origin', @origin.address, :id => "origin" %>
-    <%= hidden_field_tag 'route', @bike_stations.first.id, :id => "route" %>
+    <%= hidden_field_tag 'route', @destination.id, :id => "route" %>
     <div>
       <input id="new_origin"></input>
       <span>San Francisco, CA</span>
@@ -39,15 +39,14 @@
 <script type="text/javascript">
   $(".new_route").click(function(e){
     e.preventDefault();
-    console.log($('#new_origin').val());
     $("#route").val($(this).attr("id"));
     $('#find_stations').submit();
   });
 
   $("#set_origin").click(function(e){
     e.preventDefault();
-    $("#route").val("");
     $("#origin").val($("#new_origin").val());
+    $("#route").val("");
     $('#find_stations').submit();
   });
 </script>
