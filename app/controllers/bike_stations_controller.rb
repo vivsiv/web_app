@@ -2,22 +2,15 @@ class BikeStationsController < ApplicationController
   # GET /bike_stations
   # GET /bike_stations.json
   def index
-    origin = !params[:origin].blank? ?
-      params[:origin] + " San Francisco" : "2451 Greenwich St. San Francisco"
-    @origin = Geocoder.search(origin).first
+    unless params[:origin].blank?
+      origin = params[:origin] + " San Francisco"
+      @origin = Geocoder.search(origin).first
 
-    @bike_stations = BikeStation.near(@origin.address, 0.5, :order => :distance).limit(5)
+      @bike_stations = BikeStation.near(@origin.address, 0.5, :order => :distance).limit(5)
 
-    @destination = @bike_stations.first
-    @destination = BikeStation.find(params[:route].to_i) if !params[:route].blank?
-
-    Rails.logger.info "---------------"
-    Rails.logger.info @origin.address
-    Rails.logger.info "---------------"
-    Rails.logger.info params[:route]
-    Rails.logger.info "---------------"
-    Rails.logger.info @destination.address
-    Rails.logger.info "---------------"
+      @destination = @bike_stations.first
+      @destination = BikeStation.find(params[:route].to_i) if !params[:route].blank?
+    end
 
     respond_to do |format|
       format.html # index.html.erb

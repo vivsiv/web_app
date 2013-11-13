@@ -7,8 +7,12 @@
         enableHighAccuracy : true,
         timeout: 10 * 1000
       }
-      navigator.geolocation.getCurrentPosition(drawMap(new google.maps.LatLng(position.coords.latitude, position.coords.longitude)), geolocationError, positionOptions);
+      navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, positionOptions);
     }
+  }
+
+  function geolocationSuccess(position){
+    drawMap(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
   }
 
   function geolocationError(positionError){
@@ -52,6 +56,8 @@
         var location = new google.maps.LatLng(<%= bike_station.latitude %>, <%= bike_station.longitude %>);
         new google.maps.Marker({map: window.mapObject, position: location });
       <% end %>
+    <% else %>
+      new google.maps.Marker({map: window.mapObject, position: window.mapObject.center });
     <% end %>
   }
 
@@ -77,4 +83,20 @@
   <% else %>
     google.maps.event.addDomListener(window, 'load', geolocateUser);
   <% end %>
+
+  $(".new_route").click(function(e){
+    e.preventDefault();
+    <% if @origin %>
+      $('#origin').val("<%= @origin.address %>");
+    <% end %>
+    $("#route").val($(this).attr("id"));
+    $('#find_stations').submit();
+  });
+
+  $("#set_origin").click(function(e){
+    e.preventDefault();
+    $("#origin").val($("#new_origin").val());
+    $("#route").val("");
+    $('#find_stations').submit();
+  });
 </script>
