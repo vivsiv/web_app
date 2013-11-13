@@ -1,49 +1,21 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDZk3a0eNyOmKF7ejQ4bLHCA7G38Cb_RI&sensor=true">
 </script>
 <script type="text/javascript">
-  function geolocationSuccess(position){
-    var userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    var mapOptions = {
+  function drawMap(userLocation){
+    mapOptions = {
       center: userLocation,
       zoom: 14,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-    var mapObject = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-
-/*
-    var center = new google.maps.Circle({
-      center: userLocation,
-      radius: position.coords.accuracy,
-      map: mapObject,
-      fillColor: '#0000FF',
-      fillOpacity: 0.5,
-      strokeColor: '#0000FF',
-      strokeOpacity: 1.0
-    });
-    mapObject.fitBounds(center.getBounds());
-*/
+    window.mapObject = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
     <% @bike_stations.each do |bike_station| %>
       var location = new google.maps.LatLng(<%= bike_station.latitude %>, <%= bike_station.longitude %>);
-      console.log(location);
-      new google.maps.Marker({map: mapObject, position: location });
+      new google.maps.Marker({map: window.mapObject, position: location });
     <% end %>
 
-    var directionsService = new google.maps.DirectionsService();
-    var directionsRequest = {
-      origin: userLocation,
-      destination: new google.maps.LatLng(<%= @bike_stations.first.latitude %>, <%= @bike_stations.first.longitude %>),
-      travelMode: google.maps.DirectionsTravelMode.BICYCLING
-    }
-    directionsService.route(directionsRequest, function(response, status){
-      if (status == google.maps.DirectionsStatus.OK){
-        new google.maps.DirectionsRenderer({
-          map: mapObject,
-          directions: response
-        });
-      }
-    });
+    drawRoute(userLocation, <%= @destination.latitude %>, <%= @destination.longitude %>);
   }
 
   function geolocationError(positionError){
@@ -56,9 +28,30 @@
         enableHighAccuracy : true,
         timeout: 10 * 1000
       }
-      navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, positionOptions);
+      navigator.geolocation.getCurrentPosition(drawMap(new google.maps.LatLng(position.coords.latitude, position.coords.longitude)), geolocationError, positionOptions);
     }
   }
 
-  google.maps.event.addDomListener(window, 'load', geolocateUser);
+  function drawRoute(userLocation, destLat, destLong){
+    var directionsService = new google.maps.DirectionsService();
+    var directionsRequest = {
+      origin: userLocation,
+      destination: new google.maps.LatLng(destLat, destLong),
+      travelMode: google.maps.DirectionsTravelMode.BICYCLING
+    }
+    directionsService.route(directionsRequest, function(response, status){
+      if (status == google.maps.DirectionsStatus.OK){
+        new google.maps.DirectionsRenderer({
+          map: window.mapObject,
+          directions: response
+        });
+      }
+    });
+  }
+
+  <% if @origin %>
+    google.maps.event.addDomListener(window, 'load', drawMap(new google.maps.LatLng(<%= @origin.latitude %>, <%= @origin.longitude %>)));
+  <% else %>
+    google.maps.event.addDomListener(window, 'load', geolocateUser);
+  <% end %>
 </script>
