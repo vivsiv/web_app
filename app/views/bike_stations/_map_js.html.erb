@@ -51,10 +51,12 @@
   }
 
   function setMarkers(){
-    <% if @bike_stations %>
+    <% if @bike_stations && @bike_stations.count > 0 %>
       <% @bike_stations.each do |bike_station| %>
-        var location = new google.maps.LatLng(<%= bike_station.latitude %>, <%= bike_station.longitude %>);
-        new google.maps.Marker({map: window.mapObject, position: location });
+        <% unless @destination && @destination == bike_station %>
+          var location = new google.maps.LatLng(<%= bike_station.latitude %>, <%= bike_station.longitude %>);
+          new google.maps.Marker({map: window.mapObject, position: location });
+        <% end %>
       <% end %>
     <% else %>
       new google.maps.Marker({map: window.mapObject, position: window.mapObject.center });

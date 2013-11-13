@@ -8,8 +8,11 @@ class BikeStationsController < ApplicationController
 
       @bike_stations = BikeStation.near(@origin.address, 0.5, :order => :distance).limit(5)
 
-      @destination = @bike_stations.first
-      @destination = BikeStation.find(params[:route].to_i) if !params[:route].blank?
+      if !params[:route].blank?
+        @destination = BikeStation.find(params[:route].to_i)
+      elsif @bike_stations.count > 0
+        @destination = @bike_stations.first
+      end
     end
 
     respond_to do |format|

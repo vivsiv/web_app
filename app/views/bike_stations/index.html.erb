@@ -16,7 +16,7 @@
       <input id="new_origin"></input>
       <span>San Francisco, CA</span>
       <br/>
-      <%= submit_tag 'Set Location', :id => "set_origin" %>
+      <%= submit_tag 'Set Origin', :id => "set_origin" %>
     </div>
 
     <% if @bike_stations %>
@@ -24,7 +24,11 @@
         <ol>
           <% @bike_stations.each_with_index do |station| %>
             <li>
-              <%= "#{station.distance.to_f.round(2)} miles - #{station.name} (#{station.spaces} Spaces)" %>
+              <% unless station.name == "Unknown" %>
+                <%= "#{station.distance.to_f.round(2)} miles - #{station.name} (#{station.spaces} Spaces)" %>
+              <% else %>
+                <%= "#{station.distance.to_f.round(2)} miles - #{station.address} (#{station.spaces} Spaces)" %>
+              <% end %>
               <%= submit_tag 'Route', :class => "new_route", :id => station.id %>
             </li>
           <% end %>
