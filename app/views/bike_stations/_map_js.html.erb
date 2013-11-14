@@ -39,9 +39,13 @@
     <% end %>
   }
 
-  function codeOrigin(){
+  function codeOrigin(currentLocation){
+    var latLng = window.mapObject.center;
+    if (arguments.length == 1){
+      latLng = currentLocation;
+    }
     geocoder = new google.maps.Geocoder();
-    geocoder.geocode({'latLng': window.mapObject.center}, function(results, status){
+    geocoder.geocode({'latLng': latLng}, function(results, status){
       if (status == google.maps.GeocoderStatus.OK){
         if (results[1]){
           $('#new_origin').val(results[1].formatted_address);
@@ -89,7 +93,6 @@
   $(document).ready(function(){
     <% if @origin %>
       $('#origin').val("<%= @origin.address %>");
-      $('#new_origin').val("<%= @origin.address %>");
     <% end %>
     <% if @destination %>
       $("#route").val("<%= @destination.id %>");
@@ -110,8 +113,15 @@
     $('#find_stations').submit();
   });
 
-  $("#current_location").click(function(e){
+  $('#current_location').click(function(e){
     e.preventDefault();
-    geolocateUser();
+    function locationSuccess(position) {
+      var currentPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      codeOrigin(currentPosition);
+    }
+    function locationFail() {
+
+    }
+    navigator.geolocation.getCurrentPosition(locationSuccess, locationFail);
   });
 </script>
