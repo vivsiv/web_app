@@ -8,6 +8,18 @@ class BikeStation < ActiveRecord::Base
 
   after_validation :geocode, if: :no_coordinates
 
+  def station_name
+    if self.name == "Unknown"
+      self.name
+    else
+      self.address#.split(" ").each {|w| w.downcase.capitalize}.join(" ")
+    end
+  end
+
+  def description
+    "#{self.station_name} (#{self.spaces} Spaces)"
+  end
+
   private
     def no_coordinates
       self[:latitude].nil? || self[:longitude].nil?
