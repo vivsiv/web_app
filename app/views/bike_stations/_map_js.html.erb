@@ -44,7 +44,7 @@
     geocoder.geocode({'latLng': window.mapObject.center}, function(results, status){
       if (status == google.maps.GeocoderStatus.OK){
         if (results[1]){
-          $('#new_origin').val(results[1].formatted_address.split(",")[0]);
+          $('#new_origin').val(results[1].formatted_address);
         }
       }
     });
@@ -89,6 +89,7 @@
   $(document).ready(function(){
     <% if @origin %>
       $('#origin').val("<%= @origin.address %>");
+      $('#new_origin').val("<%= @origin.address %>");
     <% end %>
     <% if @destination %>
       $("#route").val("<%= @destination.id %>");
@@ -96,8 +97,10 @@
   });
 
   $(".new_route").click(function(e){
+    e.preventDefault();
     $("#route").val($(this).attr("id"));
     $('#route_choice').html($(this).html());
+    $('#find_stations').submit();
   });
 
   $("#set_origin").click(function(e){
@@ -105,5 +108,10 @@
     $("#origin").val($("#new_origin").val());
     $("#route").val("");
     $('#find_stations').submit();
+  });
+
+  $("#current_location").click(function(e){
+    e.preventDefault();
+    geolocateUser();
   });
 </script>

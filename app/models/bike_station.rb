@@ -16,6 +16,11 @@ class BikeStation < ActiveRecord::Base
     end
   end
 
+  def full_address
+    self.address.split.map(&:capitalize).join(' ') +
+    ", " + "San Francisco, CA"
+  end
+
   def description
     "#{self.station_name} (#{self.spaces} Spaces)"
   end

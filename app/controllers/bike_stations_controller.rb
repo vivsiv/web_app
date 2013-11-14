@@ -3,9 +3,11 @@ class BikeStationsController < ApplicationController
   # GET /bike_stations.json
   def index
     unless params[:origin].blank?
-      origin = params[:origin] + " San Francisco"
+      origin = params[:origin]
       @origin = Geocoder.search(origin).first
+    end
 
+    if @origin && @origin.city == "San Francisco"
       @bike_stations = BikeStation.near(@origin.address, 0.5, :order => :distance).limit(5)
 
       if !params[:route].blank?
