@@ -10,5 +10,6 @@ To start enter a location or use your current location, then use the station sel
 Upcoming features..
 
 - Setting origin by dropping pin on map.
+- Choose station to route to by selecting pin on map.
 - Listing turn by turn directions.
 
