@@ -12,7 +12,7 @@ class BikeStation < ActiveRecord::Base
     if self.name == "Unknown"
       self.name
     else
-      self.address#.split(" ").each {|w| w.downcase.capitalize}.join(" ")
+      self.address.split.map(&:capitalize).join(' ')
     end
   end
 
